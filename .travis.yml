@@ -1,0 +1,22 @@
+sudo: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: build docker image development
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t travis-ci-build-stages-demo -f Dockerfile-dev
+      - docker images
+      - docker tag travis-ci-build-stages-demo $DOCKER_USERNAME/ionic-dev
+      - docker push $DOCKER_USERNAME/ionic-dev
+    - stage: build docker image production
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t travis-ci-build-stages-demo -f Dockerfile-production
+      - docker images
+      - docker tag travis-ci-build-stages-demo $DOCKER_USERNAME/ionic-prod
+      - docker push $DOCKER_USERNAME/ionic-prod
+    - stage: test
+      script: docker run --rm $DOCKER_USERNAME/ionic-dev ls
+    - script: docker run --rm $DOCKER_USERNAME/ionic-prod ls

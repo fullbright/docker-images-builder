@@ -6,14 +6,14 @@ jobs:
     - stage: build docker image development
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t travis-ci-build-stages-demo -f Dockerfile-dev
+      - docker build -f Dockerfile-dev -t ionic-dev .
       - docker images
       - docker tag travis-ci-build-stages-demo $DOCKER_USERNAME/ionic-dev
       - docker push $DOCKER_USERNAME/ionic-dev
     - stage: build docker image production
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t travis-ci-build-stages-demo -f Dockerfile-production
+      - docker build -t ionic-prod -f Dockerfile-production .
       - docker images
       - docker tag travis-ci-build-stages-demo $DOCKER_USERNAME/ionic-prod
       - docker push $DOCKER_USERNAME/ionic-prod
